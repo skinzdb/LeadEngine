@@ -1,0 +1,3 @@
+[submodule "LeadEngine/vendor/spdlog"]
+	path = LeadEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog

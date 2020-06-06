@@ -27,6 +27,9 @@
     <ClInclude Include="src\lead_engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\LeadEngine\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LeadEngine\app.cpp">

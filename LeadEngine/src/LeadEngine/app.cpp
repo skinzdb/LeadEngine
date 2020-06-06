@@ -12,10 +12,7 @@ namespace le
 
 	void App::run()
 	{
-		while (1)
-		{
-
-		}
+		while (1);
 	}
 }
 

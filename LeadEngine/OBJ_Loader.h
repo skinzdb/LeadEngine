@@ -139,11 +139,11 @@ namespace objl
 		// Position Vector
 		Vector3 Position;
 
-		// Normal Vector
-		Vector3 Normal;
-
 		// Texture Coordinate Vector
 		Vector2 TextureCoordinate;
+
+		// Normal Vector
+		Vector3 Normal;
 	};
 
 	struct Material

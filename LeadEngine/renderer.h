@@ -8,6 +8,22 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
+class Transform
+{
+private:
+
+public:
+	glm::vec3 position;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+
+	Transform(float x, float y, float z);
+	Transform();
+	void translate(float x, float y, float z);
+	void rotate(float x, float y, float z);
+	void multScale(float factor);
+};
+
 class Camera : public Transform
 {
 private:
@@ -45,10 +61,10 @@ public:
 	void createUniform(const GLchar* name);
 	void setUniform(const GLchar* name, GLint value);
 	void setUniform(const GLchar* name, GLfloat value);
-	void setUniform(const GLchar* name, glm::vec2& value);
-	void setUniform(const GLchar* name, glm::vec3& value);
-	void setUniform(const GLchar* name, glm::vec4& value);
-	void setUniform(const GLchar* name, glm::mat4x4& value);
+	void setUniform(const GLchar* name, const glm::vec2& value);
+	void setUniform(const GLchar* name, const glm::vec3& value);
+	void setUniform(const GLchar* name, const glm::vec4& value);
+	void setUniform(const GLchar* name, const glm::mat4x4& value);
 	void link();
 	void bind();
 	void unbind();
@@ -77,7 +93,8 @@ private:
 	std::vector<unsigned int> vboIdList;
 	int vertexCount;
 public:
-	Mesh(unsigned int size1, float* positions, unsigned int size2, float* texCoords, unsigned int size3, float* normals, unsigned int size4, unsigned int* indices);
+	Mesh(const char* filename);
+	Mesh(unsigned int vertexCount, unsigned int indexCount, float* positions, float* texCoords, float* normals, unsigned int* indices);
 	Mesh();
 	int getVaoId();
 	int getVertexCount();
@@ -98,8 +115,6 @@ public:
 	Texture(const char* filename, bool transparency);
 	Texture(const char* filename);
 	unsigned int getId();
-	unsigned int getWidth();
-	unsigned int getHeight();
 	glm::vec3 getColour();
 	void setColour(float r, float g, float b);
 	float getShineDamper();
@@ -131,6 +146,8 @@ public:
 	static glm::mat4 modelMatrix(glm::vec3& pos, glm::vec3& rot, glm::vec3& scale);
 	static glm::mat4 viewMatrix(Camera cam);
 };
+
+class Display;
 
 class Renderer
 {

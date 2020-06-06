@@ -30,8 +30,8 @@ void Renderer::init(Display* display)
 	this->display = display;
 
 	shader = new Shader();
-	shader->createVertex("C:/Users/david/source/repos/LeadEngine/LeadEngine/vertex.shader");
-	shader->createFragment("C:/Users/david/source/repos/LeadEngine/LeadEngine/fragment.shader");
+	shader->createVertex("C:/Users/David/source/repos/LeadEngine/LeadEngine/basic.vs");
+	shader->createFragment("C:/Users/David/source/repos/LeadEngine/LeadEngine/basic.fs");
 	shader->link();
 
 	/* Matrix uniforms */
@@ -108,8 +108,7 @@ void Renderer::render(Camera cam, std::vector<Entity*>& entities, bool clear)
 		Texture* texture = entity->getTexture();
 		if (texture != NULL) /* Apply texture variables if entity has one. */
 		{
-			glm::vec3 colour = texture->getColour();
-			shader->setUniform("colour", colour);
+			shader->setUniform("colour", texture->getColour());
 			shader->setUniform("shineDamper", texture->getShineDamper());
 			shader->setUniform("reflectivity", texture->getReflectivity());
 			setCulling(texture->hasTransparency());
@@ -128,8 +127,7 @@ void Renderer::updateLight()
 
 	shader->setUniform("ambientLight", light.getIntensity());
 	shader->setUniform("lightPos", light.position);
-	glm::vec3 lightCol = light.getColour();
-	shader->setUniform("lightColour", lightCol);
+	shader->setUniform("lightColour", light.getColour());
 
 	shader->unbind();
 }
@@ -282,10 +280,46 @@ void Entity::cleanup()
  * MESH 															  *
  **********************************************************************/
 
-Mesh::Mesh(unsigned int size1, float* positions, unsigned int size2, float* texCoords, unsigned int size3, float* normals, unsigned int size4, unsigned int* indices)
+#include "OBJ_Loader.h"
+
+Mesh::Mesh(const char* filename) : Mesh()
 {
-	vertexCount = size4;
-	vboIdList = std::vector<unsigned int>();
+	objl::Loader loader;
+
+	bool loadSuccess = loader.LoadFile(filename);
+
+	if (loadSuccess)
+	{
+		objl::Mesh mesh = loader.LoadedMeshes[0];
+
+		glGenVertexArrays(1, &vaoId);
+		glBindVertexArray(vaoId);
+
+		GLuint vboId;
+		glGenBuffers(1, &vboId);
+		vboIdList.push_back(vboId);
+		glBindBuffer(GL_ARRAY_BUFFER, vboId);
+		glBufferData(GL_ARRAY_BUFFER, mesh.Vertices.size() * 8 * sizeof(float), (float*)mesh.Vertices.data(), GL_STATIC_DRAW);
+		
+		vertexCount = mesh.Indices.size();
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+
+		glGenBuffers(1, &vboId);
+		vboIdList.push_back(vboId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexCount * sizeof(unsigned int), mesh.Indices.data(), GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+}
+
+Mesh::Mesh(unsigned int vertexCount, unsigned int indexCount, float* positions, float* texCoords, float* normals, unsigned int* indices)
+{
+	this->vertexCount = vertexCount;
 
 	glGenVertexArrays(1, &vaoId);
 	glBindVertexArray(vaoId);
@@ -295,28 +329,28 @@ Mesh::Mesh(unsigned int size1, float* positions, unsigned int size2, float* texC
 	glGenBuffers(1, &vboId);
 	vboIdList.push_back(vboId);
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	glBufferData(GL_ARRAY_BUFFER, size1 * sizeof(float), positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(float), positions, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Texture coordinates VBO
 	glGenBuffers(1, &vboId);
 	vboIdList.push_back(vboId);
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	glBufferData(GL_ARRAY_BUFFER, size2 * sizeof(float), texCoords, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * 2 * sizeof(float), texCoords, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Normals VBO
 	glGenBuffers(1, &vboId);
 	vboIdList.push_back(vboId);
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	glBufferData(GL_ARRAY_BUFFER, size3 * sizeof(float), normals, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(float), normals, GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Index VBO
 	glGenBuffers(1, &vboId);
 	vboIdList.push_back(vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size4 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -449,6 +483,36 @@ void Texture::setTransparency(bool val)
 void Texture::cleanup()
 {
 	glDeleteTextures(1, &id);
+}
+
+/**********************************************************************
+ * TRANSFORM														  *
+ **********************************************************************/
+
+Transform::Transform(float x, float y, float z)
+{
+	position = glm::vec3(x, y, z);
+	rotation = glm::vec3(0.0f);
+	scale = glm::vec3(1.0f);
+}
+
+Transform::Transform() : Transform(0, 0, 0)
+{
+}
+
+void Transform::translate(float x, float y, float z)
+{
+	position += glm::vec3(x, y, z);
+}
+
+void Transform::rotate(float x, float y, float z)
+{
+	rotation += glm::vec3(x, y, z);
+}
+
+void Transform::multScale(float factor)
+{
+	scale *= factor;
 }
 
 /**********************************************************************
@@ -588,22 +652,22 @@ void Shader::setUniform(const GLchar* name, GLfloat value)
 	glUniform1f(uniforms.at(name), value);
 }
 
-void Shader::setUniform(const GLchar* name, glm::vec2& value)
+void Shader::setUniform(const GLchar* name, const glm::vec2& value)
 {
 	glUniform2f(uniforms.at(name), value.x, value.y);
 }
 
-void Shader::setUniform(const GLchar* name, glm::vec3& value)
+void Shader::setUniform(const GLchar* name, const glm::vec3& value)
 {
 	glUniform3f(uniforms.at(name), value.x, value.y, value.z);
 }
 
-void Shader::setUniform(const GLchar* name, glm::vec4& value)
+void Shader::setUniform(const GLchar* name, const glm::vec4& value)
 {
 	glUniform4f(uniforms.at(name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setUniform(const GLchar* name, glm::mat4x4& value)
+void Shader::setUniform(const GLchar* name, const glm::mat4x4& value)
 {
 	glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, &value[0][0]);
 }

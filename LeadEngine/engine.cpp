@@ -22,12 +22,11 @@ void Engine::init()
 	renderer.init(&display);
 	timer.init();
 
-	cam = Camera(0, 0, 5);
+	cam = Camera(0, 0, 1);
 
-	//test = Entity(ModelLoader::load("C:/Users/david/Documents/Java/MyGame/res/blacksmith.obj"), new Texture("C:/Users/david/Documents/Java/MyGame/res/blendmap.png", 0.7f, 0.3f, false));
-	//test = Entity(ModelLoader::load("C:/Users/David/Documents/negev.obj"), new Texture("C:/Users/David/Pictures/white.png"));
-	test.translate(0, 0, -10);
-	test.multScale(1.55f);
+	test = Entity(new Mesh("C:/Users/David/Documents/negev.obj"), new Texture("C:/Users/David/Pictures/white.png"));
+	test.translate(0, 0, -5);
+	test.multScale(0.35f);
 	entities.push_back(&test);
 }
 
@@ -65,9 +64,10 @@ void Engine::gameLoop()
 		}
 	}
 
-	/* Cleanup windows and terminate GLFW. */
+	/* Cleanup window and terminate GLFW. */
 	glfwDestroyWindow(display.getWindow());
 	glfwTerminate();
+	exit(EXIT_SUCCESS);
 }
 
 
@@ -136,7 +136,7 @@ static void error_callback(int error, const char* description)
 	fprintf(stderr, "Error: %s\n", description);
 }
 
-Display::Display(const GLchar* title, GLsizei width, GLsizei height) : window(NULL), vSync(true)
+Display::Display(const char* title, unsigned int width, unsigned int height) : window(NULL), vSync(true)
 {
 	this->title = title;
 	this->width = width;
@@ -189,7 +189,7 @@ void Display::clearColour(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 	glClearColor(r, g, b, a);
 }
 
-const GLchar* Display::getTitle()
+const char* Display::getTitle()
 {
 	return title;
 }
@@ -200,12 +200,12 @@ void Display::setTitle(const GLchar* title)
 	glfwSetWindowTitle(window, title);
 }
 
-GLsizei Display::getWidth()
+unsigned int Display::getWidth()
 {
 	return width;
 }
 
-GLsizei Display::getHeight()
+unsigned int Display::getHeight()
 {
 	return height;
 }
@@ -235,7 +235,7 @@ GLFWwindow* Display::getWindow()
 	return window;
 }
 
-void Display::resize(GLsizei width, GLsizei height)
+void Display::resize(unsigned int width, unsigned int height)
 {
 	this->width = width;
 	this->height = height;
@@ -246,34 +246,4 @@ void Display::resize(GLsizei width, GLsizei height)
 bool Display::shouldClose()
 {
 	return glfwWindowShouldClose(window);
-}
-
-/**********************************************************************
- * TRANSFORM														  *
- **********************************************************************/
-
-Transform::Transform(float x, float y, float z)
-{
-	position = glm::vec3(x, y, z);
-	rotation = glm::vec3(0.0f);
-	scale = glm::vec3(1.0f);
-}
-
-Transform::Transform() : Transform(0, 0, 0)
-{
-}
-
-void Transform::translate(float x, float y, float z)
-{
-	position += glm::vec3(x, y, z);
-}
-
-void Transform::rotate(float x, float y, float z)
-{
-	rotation += glm::vec3(x, y, z);
-}
-
-void Transform::multScale(float factor)
-{
-	scale *= factor;
 }

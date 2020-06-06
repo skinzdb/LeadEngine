@@ -8,8 +8,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "renderer.h"
-
 /**********************************************************************
 \class Display
 \brief Creates a window using GLFW.
@@ -84,23 +82,23 @@ class Display
 {
 private:
 	const char* title;
-	int width;
-	int height;
+	unsigned int width;
+	unsigned int height;
 	bool vSync;
 	GLFWwindow* window;
 public:
-	Display(const GLchar* title, GLsizei width, GLsizei height);
+	Display(const char* title, unsigned int width, unsigned int height);
 	void init();
 	void update();
-	void clearColour(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-	const GLchar* getTitle();
-	void setTitle(const GLchar* title);
-	GLsizei getWidth();
-	GLsizei getHeight();
+	void clearColour(float r, float g, float b, float a);
+	const char* getTitle();
+	void setTitle(const char* title);
+	unsigned int getWidth();
+	unsigned int getHeight();
 	bool isVSync();
 	void setVSync(bool value);
 	GLFWwindow* getWindow();
-	void resize(GLsizei width, GLsizei height);
+	void resize(unsigned int width, unsigned int height);
 	bool shouldClose();
 };
 
@@ -167,6 +165,8 @@ public:
 	\brief Cleans up renderer and entities after game is finished.
 */
 
+#include "renderer.h"
+
 class Engine
 {
 private:
@@ -190,22 +190,6 @@ public:
 	void sync();
 	void render();
 	void cleanup();
-};
-
-class Transform
-{
-private:
-
-public:
-	glm::vec3 position;
-	glm::vec3 rotation;
-	glm::vec3 scale;
-
-	Transform(float x, float y, float z);
-	Transform();
-	void translate(float x, float y, float z);
-	void rotate(float x, float y, float z);
-	void multScale(float factor);
 };
 #endif
 

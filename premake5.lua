@@ -18,18 +18,9 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
---IncludeDir["GLFW"] = "LeadEngine/vendor/GLFW/include"
---IncludeDir["Glad"] = "LeadEngine/vendor/Glad/include"
---IncludeDir["ImGui"] = "LeadEngine/vendor/imgui"
---IncludeDir["glm"] = "LeadEngine/vendor/glm"
---IncludeDir["stb_image"] = "LeadEngine/vendor/stb_image"
+IncludeDir["GLFW"] = "LeadEngine/vendor/GLFW/include"
 
---group "Dependencies"
---	include "LeadEngine/vendor/GLFW"
---	include "LeadEngine/vendor/Glad"
---	include "LeadEngine/vendor/imgui"
-
-group ""
+include "LeadEngine/vendor/GLFW"
 
 project "LeadEngine"
 	location "LeadEngine"
@@ -47,37 +38,21 @@ project "LeadEngine"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		--"%{prj.name}/vendor/stb_image/**.h",
-		--"%{prj.name}/vendor/stb_image/**.cpp",
-		--"%{prj.name}/vendor/glm/glm/**.hpp",
-		--"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/src/**.cpp"
 	}
-
-	--defines
-	--{
-	--	"_CRT_SECURE_NO_WARNINGS",
-	--	"GLFW_INCLUDE_NONE"
-	--}
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
-		--"%{IncludeDir.GLFW}",
-		--"%{IncludeDir.Glad}",
-		--"%{IncludeDir.ImGui}",
-		--"%{IncludeDir.glm}",
-		--"%{IncludeDir.stb_image}"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
 	}
 
-	--links 
-	--{ 
-	--	"GLFW",
-	--	"Glad",
-	--	"ImGui",
-	--	"opengl32.lib"
-	--}
+	links 
+	{ 
+		"GLFW",
+		"opengl32.lib"
+	}
 
 	filter "system:windows"
 		systemversion "latest"

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "core.h"
+#include "LeadEngine/core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 

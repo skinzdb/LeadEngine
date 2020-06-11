@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "LeadEngine/core.h"
 
 namespace le
 {

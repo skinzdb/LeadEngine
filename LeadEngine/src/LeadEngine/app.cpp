@@ -1,9 +1,14 @@
-#include "app.h"
+#include "le_pch.h"
+
+#include "LeadEngine/app.h"
+
+#include "LeadEngine/event.h"
 
 namespace le
 {
 	App::App()
 	{
+		window = std::unique_ptr<Window>(Window::create());
 	}
 
 	App::~App()
@@ -12,7 +17,10 @@ namespace le
 
 	void App::run()
 	{
-		while (1);
+		while (running)
+		{
+			window->update();
+		}
 	}
 }
 

@@ -4,6 +4,12 @@
     <Filter Include="LeadEngine">
       <UniqueIdentifier>{31B28F9D-1D6A-D1EA-8671-AA4672486CDB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LeadEngine\app.h">
@@ -18,22 +24,34 @@
     <ClInclude Include="src\LeadEngine\event.h">
       <Filter>LeadEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\LeadEngine\layer.h">
+      <Filter>LeadEngine</Filter>
+    </ClInclude>
     <ClInclude Include="src\LeadEngine\log.h">
       <Filter>LeadEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\LeadEngine\window.h">
+      <Filter>LeadEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\win_window.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\le_pch.h" />
     <ClInclude Include="src\lead_engine.h" />
-    <ClInclude Include="src\LeadEngine\window.h" />
-    <ClInclude Include="src\Platform\Windows\win_window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LeadEngine\app.cpp">
       <Filter>LeadEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\LeadEngine\layer.cpp">
+      <Filter>LeadEngine</Filter>
+    </ClCompile>
     <ClCompile Include="src\LeadEngine\log.cpp">
       <Filter>LeadEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\win_window.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\le_pch.cpp" />
-    <ClCompile Include="src\Platform\Windows\win_window.cpp" />
   </ItemGroup>
 </Project>

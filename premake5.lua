@@ -19,8 +19,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "LeadEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "LeadEngine/vendor/Glad/include"
 
 include "LeadEngine/vendor/GLFW"
+include "LeadEngine/vendor/Glad"
 
 project "LeadEngine"
 	location "LeadEngine"
@@ -45,12 +47,14 @@ project "LeadEngine"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links 
 	{ 
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -60,7 +64,8 @@ project "LeadEngine"
 		defines
 		{
 			"LE_PLATFORM_WINDOWS",
-			"LE_BUILD_DLL"
+			"LE_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands
@@ -70,17 +75,17 @@ project "LeadEngine"
 
 	filter "configurations:Debug"
 		defines "LE_DEBUG"
-		runtime "Debug"
+		buildoptions "/MDd"
 		symbols "on"
 
 	filter "configurations:Release"
 		defines "LE_RELEASE"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "on"
 
 	filter "configurations:Dist"
 		defines "LE_DIST"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "on"
 
 project "Sandbox"
@@ -122,15 +127,15 @@ project "Sandbox"
 		
 	filter "configurations:Debug"
 		defines "LE_DEBUG"
-		runtime "Debug"
+		buildoptions "/MDd"
 		symbols "on"
 
 	filter "configurations:Release"
 		defines "LE_RELEASE"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "on"
 
 	filter "configurations:Dist"
 		defines "LE_DIST"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "on"

@@ -30,10 +30,9 @@ namespace le
 
 	class LE_API Event
 	{
-		friend class EventDispatcher;
-	protected:
-		bool handled = false;
 	public:
+		bool handled = false;
+
 		virtual EventType getEventType() const = 0;
 		virtual const char* getName() const = 0;
 		virtual int getCategoryFlags() const = 0;
@@ -98,6 +97,7 @@ namespace le
 
 	class LE_API WindowCloseEvent : public Event
 	{
+	public:
 		WindowCloseEvent() {}
 
 		EVENT_CLASS_TYPE(WINDOW_CLOSE)

@@ -2,6 +2,7 @@
 
 /* For use in LeadEngine applications. */
 #include "LeadEngine/app.h"
+#include "LeadEngine/layer.h"
 #include "LeadEngine/log.h"
 
 /* ENTRY POINT ----------------------- */
